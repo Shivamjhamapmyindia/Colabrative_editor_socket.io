@@ -14,14 +14,23 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
+      #container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
     </style>
   </head>
   <body>
+ <div id="container">
     <h1 id="title">Welcom Colabrative Editor</h1>
   
-   <textarea id="text" cols="30" rows="10">
-
+    <textarea id="text" cols="100" rows="50">
+ 
    </textarea>
+ </div> 
     <script src="http://10.10.21.108:5000/socket.io/socket.io.js"></script>
 <script>
   const socket = io( 'http://10.10.21.108:5000' );
@@ -29,12 +38,20 @@
   socket.on('connect', () => {
     console.log('connected');
   })
+
+
  const textArea=document.getElementById('text')
+
+ if(localStorage.getItem('text')){
+  textArea.value=localStorage.getItem('text')
+ }
 textArea.addEventListener('input', () => {
 console.log(textArea.value)
 socket.emit('edit', textArea.value)
-
+localStorage.setItem('text', textArea.value)
 })
+
+
 socket.on('updateContent', (content) => {
   textArea.value=content
 })
